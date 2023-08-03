@@ -7,6 +7,12 @@ pub struct Vector3 {
     z: f64
 }
 
+impl Vector3 {
+    fn magnitude(self: Vector3) -> f64 {
+        (self.x * self.x + self.y * self.y + self.z * self.z).sqrt()
+    }
+}
+
 impl Add<Vector3> for Vector3 {
     type Output = Vector3;
 
@@ -59,5 +65,13 @@ mod tests {
         };
 
         assert_eq!(vector1 + vector2, Vector3 {x: 1.5 * 2.0, y: -4.3 * 2.0, z: 2.7 * 2.0});
+    }
+    #[test]
+    fn vector_magnitude() {
+        let vector = Vector3 {
+            x: 1.5, y: -4.3, z: 2.7
+        };
+
+        assert_eq!(vector.magnitude(), 5.294336596779619);
     }
 }
