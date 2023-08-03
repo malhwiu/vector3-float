@@ -8,8 +8,12 @@ pub struct Vector3 {
 }
 
 impl Vector3 {
-    fn magnitude(self: Vector3) -> f64 {
+    fn magnitude(&self) -> f64 {
         (self.x * self.x + self.y * self.y + self.z * self.z).sqrt()
+    }
+
+    fn sqr_magnitude(&self) -> f64 {
+        self.x * self.x + self.y * self.y + self.z * self.z
     }
 }
 
@@ -73,5 +77,6 @@ mod tests {
         };
 
         assert_eq!(vector.magnitude(), 5.294336596779619);
+        assert_eq!(vector.sqr_magnitude(), 28.03);
     }
 }
