@@ -1,13 +1,12 @@
 use std::ops::{Add, Sub, Mul};
-use std::cmp::{PartialEq};
-use std::env;
+use std::cmp::PartialEq;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vector3 {
     x: f64,    y: f64,
     z: f64
 }
-
+#[allow(unused)]
 impl Vector3 {
     fn magnitude(&self) -> f64 {
         (*self**self).sqrt()
