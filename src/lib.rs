@@ -1,7 +1,7 @@
-use std::ops::{Add, Sub};
+use std::ops::{Add, Sub, Mul};
 use std::cmp::{PartialEq};
 
-#[derive(Debug)]
+#[derive(Copy, Clone, Debug)]
 pub struct Vector3 {
     x: f64,    y: f64,
     z: f64
@@ -14,6 +14,21 @@ impl Vector3 {
 
     fn sqr_magnitude(&self) -> f64 {
         self.x * self.x + self.y * self.y + self.z * self.z
+    }
+
+    fn angle(&self, v2: &Vector3) -> f64 {
+        let dot: f64 = *self**v2;
+        let magnitudes: (f64, f64) = (self.magnitude(), v2.magnitude());
+
+        (dot / magnitudes.0.abs() * magnitudes.1.abs()).cos().powf(-1.0)
+    }
+}
+
+impl Mul<Vector3> for Vector3 {
+    type Output = f64;
+
+    fn mul(self, rhs: Vector3) -> f64 {
+        (self.x * rhs.x) + (self.y * rhs.y) + (self.z * rhs.z)
     }
 }
 
@@ -79,4 +94,17 @@ mod tests {
         assert_eq!(vector.magnitude(), 5.294336596779619);
         assert_eq!(vector.sqr_magnitude(), 28.03);
     }
+    #[test]
+    fn dot_vectors() {
+        let vector1 = Vector3 {
+            x: 1.5, y: -4.3, z: 2.7
+        };
+        let vector2 = Vector3 {
+            x: 1.5, y: -4.3, z: 2.7
+        };
+
+        assert_eq!(vector1 * vector2, 5.0);
+    }
+
+
 }
