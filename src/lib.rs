@@ -1,5 +1,6 @@
 use std::ops::{Add, Sub, Mul};
 use std::cmp::{PartialEq};
+use std::env;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vector3 {
@@ -9,18 +10,18 @@ pub struct Vector3 {
 
 impl Vector3 {
     fn magnitude(&self) -> f64 {
-        (self.x * self.x + self.y * self.y + self.z * self.z).sqrt()
+        (*self**self).sqrt()
     }
 
     fn sqr_magnitude(&self) -> f64 {
-        self.x * self.x + self.y * self.y + self.z * self.z
+        *self**self
     }
 
     fn angle(&self, v2: &Vector3) -> f64 {
         let dot: f64 = *self**v2;
         let magnitudes: (f64, f64) = (self.magnitude(), v2.magnitude());
 
-        (dot / magnitudes.0.abs() * magnitudes.1.abs()).cos().powf(-1.0)
+        (dot / (magnitudes.0 * magnitudes.1)).acos().to_degrees()
     }
 }
 
@@ -103,7 +104,19 @@ mod tests {
             x: 1.5, y: -4.3, z: 2.7
         };
 
-        assert_eq!(vector1 * vector2, 5.0);
+        assert_eq!(vector1 * vector2, 28.03);
+    }
+
+    #[test]
+    fn angle_between() {
+        let vector_a = Vector3 {
+            x: 3.0, y: -2.0, z: 0.0
+        };
+        let vector_b = Vector3 {
+            x: 1.0, y: 7.0, z: 0.0
+        };
+
+        assert_eq!(115.55996517182382, vector_a.angle(&vector_b));
     }
 
 
