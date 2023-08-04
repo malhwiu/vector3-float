@@ -36,6 +36,10 @@ impl Vector3 {
     fn project_on(&self, b: &Vector3) -> Vector3 {
         *b*((*self * *b) / (*b * *b))
     }
+
+    fn reject_from(&self, b: &Vector3) -> Vector3 {
+        *self - self.project_on(b)
+    }
 }
 
 
