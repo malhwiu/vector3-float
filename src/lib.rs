@@ -16,11 +16,23 @@ impl Vector3 {
         *self**self
     }
 
+    fn normalize(&self) -> Vector3 {
+        (1.0 / (self.x * self.x + self.y * self.y + self.z + self.z).sqrt()) * *self
+    }
+
     fn angle(&self, v2: &Vector3) -> f64 {
         let dot: f64 = *self**v2;
         let magnitudes: (f64, f64) = (self.magnitude(), v2.magnitude());
 
         (dot / (magnitudes.0 * magnitudes.1)).acos().to_degrees()
+    }
+}
+
+impl Mul<Vector3> for f64 {
+    type Output = Vector3;
+
+    fn mul(self, rhs: Vector3) -> Vector3 {
+        Vector3 { x: rhs.x * self, y: rhs.y * self, z: rhs.z * self }
     }
 }
 
@@ -63,6 +75,24 @@ impl PartialEq<Vector3> for Vector3 {
 mod tests {
     use super::*;
 
+    #[test]
+    fn scalar_multiply() {
+        let vec = Vector3 {
+            x: 1.5, y: -4.3, z: 2.7
+        };
+
+        let val: f64 = 5.0;
+
+        assert_eq!(Vector3 {x: 1.5 * val, y: -4.3 * val, z: 2.7 * val}, val * vec);
+    }
+
+    #[test]
+    fn vector_normalization() {
+        let v = Vector3 {x: 10.0, y: 5.0, z: 0.0};
+
+        assert_eq!(Vector3 {x: 0.8944271909999159, y: 0.4472135954999579, z: 0.0}, v.normalize());
+        assert_eq!(1.0, v.normalize().magnitude());
+    }
     #[test]
     fn sub_two_vectors() {
         let vector1 = Vector3 {
