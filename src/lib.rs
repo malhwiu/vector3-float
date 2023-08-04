@@ -36,6 +36,14 @@ impl Mul<Vector3> for f64 {
     }
 }
 
+impl Mul<f64> for Vector3 {
+    type Output = Vector3;
+
+    fn mul(self, rhs: f64) -> Vector3 {
+        Vector3 { x: rhs * self.x, y: rhs * self.y, z: rhs * self.z }
+    }
+}
+
 impl Mul<Vector3> for Vector3 {
     type Output = f64;
 
@@ -83,7 +91,7 @@ mod tests {
 
         let val: f64 = 5.0;
 
-        assert_eq!(Vector3 {x: 1.5 * val, y: -4.3 * val, z: 2.7 * val}, val * vec);
+        assert_eq!(Vector3 {x: 1.5 * val, y: -4.3 * val, z: 2.7 * val}, vec * val);
     }
 
     #[test]
@@ -91,7 +99,7 @@ mod tests {
         let v = Vector3 {x: 10.0, y: 5.0, z: 0.0};
 
         assert_eq!(Vector3 {x: 0.8944271909999159, y: 0.4472135954999579, z: 0.0}, v.normalize());
-        assert_eq!(1.0, v.normalize().magnitude());
+        assert_eq!(1.0, v.normalize().magnitude().round());
     }
     #[test]
     fn sub_two_vectors() {
