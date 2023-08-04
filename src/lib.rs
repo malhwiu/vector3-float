@@ -98,16 +98,16 @@ mod tests {
     fn project() {
         let vector_a = Vector3 {
             x: 4.0,
-            y: 7.0,
+            y: 4.0,
             z: 0.0
         };
         let vector_b = Vector3 {
-            x: 0.866,
-            y: 0.5,
+            x: 1.0,
+            y: 2.0,
             z: 0.0
         };
 
-        assert_eq!(vector_a.project_on(&vector_b), Vector3 { x: 6.031089367932189, y: 3.482153214741449, z: 0.0});
+        assert_eq!(vector_a.project_on(&vector_b), Vector3 { x: 2.4, y: 4.8, z: 0.0});
     }
 
     #[test]
