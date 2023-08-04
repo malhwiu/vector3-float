@@ -3,9 +3,11 @@ use std::cmp::PartialEq;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vector3 {
-    x: f64,    y: f64,
+    x: f64,    
+    y: f64,
     z: f64
 }
+
 #[allow(unused)]
 impl Vector3 {
     fn magnitude(&self) -> f64 {
@@ -20,13 +22,22 @@ impl Vector3 {
         (1.0 / (self.x * self.x + self.y * self.y + self.z + self.z).sqrt()) * *self
     }
 
+    fn powf(&self, power: f64) -> Vector3 {
+        Vector3 { x: self.x.powf(2.0), y: self.y.powf(2.0), z: self.z.powf(2.0) }
+    }
+
     fn angle(&self, v2: &Vector3) -> f64 {
         let dot: f64 = *self**v2;
         let magnitudes: (f64, f64) = (self.magnitude(), v2.magnitude());
 
         (dot / (magnitudes.0 * magnitudes.1)).acos().to_degrees()
     }
+
+    fn project_on(&self, b: &Vector3) -> Vector3 {
+        *b*((*self * *b) / (*b * *b))
+    }
 }
+
 
 impl Mul<Vector3> for f64 {
     type Output = Vector3;
@@ -82,6 +93,22 @@ impl PartialEq<Vector3> for Vector3 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn project() {
+        let vector_a = Vector3 {
+            x: 4.0,
+            y: 7.0,
+            z: 0.0
+        };
+        let vector_b = Vector3 {
+            x: 0.866,
+            y: 0.5,
+            z: 0.0
+        };
+
+        assert_eq!(vector_a.project_on(&vector_b), Vector3 { x: 6.031089367932189, y: 3.482153214741449, z: 0.0});
+    }
 
     #[test]
     fn scalar_multiply() {
