@@ -10,6 +10,7 @@ pub struct Vector3 {
 
 #[allow(unused)]
 impl Vector3 {
+    /// Get vector length
     fn magnitude(&self) -> f64 {
         (*self**self).sqrt()
     }
@@ -17,26 +18,28 @@ impl Vector3 {
     fn sqr_magnitude(&self) -> f64 {
         *self**self
     }
-
+    /// Normalize vector eg. Set it lenght to one
     fn normalize(&self) -> Vector3 {
         (1.0 / (self.x * self.x + self.y * self.y + self.z + self.z).sqrt()) * *self
     }
-
+    /// Put each axis of the vector in power
     fn powf(&self, power: f64) -> Vector3 {
-        Vector3 { x: self.x.powf(2.0), y: self.y.powf(2.0), z: self.z.powf(2.0) }
+        Vector3 { x: self.x.powf(power), y: self.y.powf(power), z: self.z.powf(power) }
     }
 
+    /// Get angle between two vectors
     fn angle(&self, v2: &Vector3) -> f64 {
         let dot: f64 = *self**v2;
         let magnitudes: (f64, f64) = (self.magnitude(), v2.magnitude());
 
         (dot / (magnitudes.0 * magnitudes.1)).acos().to_degrees()
     }
-
+    /// Project on vector
     fn project_on(&self, b: &Vector3) -> Vector3 {
         *b*((*self * *b) / (*b * *b))
     }
 
+    /// Get vector between projected and projectee vectors 
     fn reject_from(&self, b: &Vector3) -> Vector3 {
         *self - self.project_on(b)
     }
@@ -61,7 +64,7 @@ impl Mul<f64> for Vector3 {
 
 impl Mul<Vector3> for Vector3 {
     type Output = f64;
-
+    /// Get dot product of two vectors
     fn mul(self, rhs: Vector3) -> f64 {
         (self.x * rhs.x) + (self.y * rhs.y) + (self.z * rhs.z)
     }
