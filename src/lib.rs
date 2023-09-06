@@ -21,19 +21,31 @@ impl Vector3 {
     pub fn new_zero() -> Vector3 {
         Vector3 { x: 0.0, y: 0.0, z: 0.0 }
     }
-    /// Get vector length
+
+    /// Return the memory representation of this vector as a byte array in **big-endian** byte order. Order -> `x, y, z`
+    pub fn to_be_bytes(&self) -> [u8; 24] {
+        let mut result: [u8; 24] = [0; 24];
+
+        result[0..7].clone_from_slice(&self.x.to_be_bytes());
+        result[8..15].clone_from_slice(&self.y.to_be_bytes());
+        result[16..24].clone_from_slice(&self.z.to_be_bytes());
+
+        result
+    }
+
+    /// Get vector's length
     pub fn magnitude(&self) -> f64 {
         (*self**self).sqrt()
     }
-
+    /// Same as `magnitude()`, but **not** sqrted
     pub fn sqr_magnitude(&self) -> f64 {
         *self**self
     }
-    /// Normalize vector eg. Set it lenght to one
+    /// Normalize vector or set it's length to `1`, but keep the same direction
     pub fn normalize(&self) -> Vector3 {
         (1.0 / (self.x * self.x + self.y * self.y + self.z + self.z).sqrt()) * *self
     }
-    /// Put each axis of the vector in power
+    /// Raises each axis of the vector to a floating point power
     pub fn powf(&self, power: f64) -> Vector3 {
         Vector3 { x: self.x.powf(power), y: self.y.powf(power), z: self.z.powf(power) }
     }
