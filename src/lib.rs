@@ -26,9 +26,9 @@ impl Vector3 {
     pub fn to_be_bytes(&self) -> [u8; 24] {
         let mut result: [u8; 24] = [0; 24];
 
-        result[0..7].clone_from_slice(&self.x.to_be_bytes());
-        result[8..15].clone_from_slice(&self.y.to_be_bytes());
-        result[16..24].clone_from_slice(&self.z.to_be_bytes());
+        result[..=7].clone_from_slice(&self.x.to_be_bytes());
+        result[8..=15].clone_from_slice(&self.y.to_be_bytes());
+        result[16..].clone_from_slice(&self.z.to_be_bytes());
 
         result
     }
@@ -133,6 +133,17 @@ mod tests {
     use super::*;
 
     #[test]
+    fn to_bytes() {
+        let vector_a = Vector3 {
+            x: 4.0,
+            y: 4.0,
+            z: 4.0
+        };
+        println!("{:?}", &vector_a.to_be_bytes());
+        assert_eq!(vec![64, 16, 0, 0, 0, 0, 0, 0, 64, 16, 0, 0, 0, 0, 0, 0, 64, 16, 0, 0, 0, 0, 0, 0], vector_a.to_be_bytes().to_vec());
+    }
+
+    #[test]
     fn project() {
         let vector_a = Vector3 {
             x: 4.0,
@@ -144,7 +155,7 @@ mod tests {
             y: 2.0,
             z: 0.0
         };
-
+        
         assert_eq!(vector_a.project_on(&vector_b), Vector3 { x: 2.4, y: 4.8, z: 0.0});
     }
 
