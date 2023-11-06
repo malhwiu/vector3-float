@@ -40,7 +40,7 @@ impl Vector3 {
         Vector3 { x: 0.0, y: 0.0, z: 0.0 }
     }
 
-    /// Return the vector from the memory representation as a byte array in **big-endian** byte order. Order -> `x, y, z`
+    /// Return the vector from the memory representation in **big-endian** byte order. Order -> `x, y, z`
     pub fn from_be_bytes(bytes: [u8; 24]) -> Vector3 {
         Vector3 {
             x: f64::from_be_bytes(bytes[..8].try_into().unwrap()),
