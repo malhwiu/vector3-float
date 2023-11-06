@@ -17,7 +17,6 @@
 
 use std::ops::{Add, Sub, Mul, Div};
 use std::cmp::PartialEq;
-use std::panic::UnwindSafe;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vector3 {
