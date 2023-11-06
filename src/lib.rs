@@ -40,12 +40,12 @@ impl Vector3 {
     }
 
     /// Return the vector from the memory representation in **big-endian** byte order. Order -> `x, y, z`
-    pub fn from_be_bytes(bytes: [u8; 24]) -> Vector3 {
-        Vector3 {
-            x: f64::from_be_bytes(bytes[..8].try_into().unwrap()),
-            y: f64::from_be_bytes(bytes[8..16].try_into().unwrap()),
-            z: f64::from_be_bytes(bytes[16..].try_into().unwrap())
-        }        
+    pub fn from_be_bytes(bytes: [u8; 24]) -> Result<Vector3, Box<dyn std::error::Error>> {
+        Ok(Vector3 {
+            x: f64::from_be_bytes(bytes[..8].try_into()?),
+            y: f64::from_be_bytes(bytes[8..16].try_into()?),
+            z: f64::from_be_bytes(bytes[16..].try_into()?)
+        })   
     }
 
     /// Return the memory representation of this vector as a byte array in **big-endian** byte order. Order -> `x, y, z`
