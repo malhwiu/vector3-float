@@ -17,6 +17,7 @@
 
 use std::ops::{Add, Sub, Mul, Div};
 use std::cmp::PartialEq;
+use std::panic::UnwindSafe;
 
 #[derive(Copy, Clone, Debug)]
 pub struct Vector3 {
@@ -37,6 +38,15 @@ impl Vector3 {
 
     pub fn new_zero() -> Vector3 {
         Vector3 { x: 0.0, y: 0.0, z: 0.0 }
+    }
+
+    /// Return the vector from the memory representation as a byte array in **big-endian** byte order. Order -> `x, y, z`
+    pub fn from_be_bytes(bytes: [u8; 24]) -> Vector3 {
+        Vector3 {
+            x: f64::from_be_bytes(bytes[..8].try_into().unwrap()),
+            y: f64::from_be_bytes(bytes[8..16].try_into().unwrap()),
+            z: f64::from_be_bytes(bytes[16..].try_into().unwrap())
+        }        
     }
 
     /// Return the memory representation of this vector as a byte array in **big-endian** byte order. Order -> `x, y, z`
