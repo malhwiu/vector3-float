@@ -18,7 +18,7 @@
 use std::ops::{Add, Sub, Mul, Div};
 use std::cmp::PartialEq;
 
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Default)]
 pub struct Vector3 {
     pub x: f64,    
     pub y: f64,
@@ -157,6 +157,12 @@ impl PartialEq<Vector3> for Vector3 {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn default_values() {
+        let zero = Vector3::default();
+        assert_eq!(zero, Vector3::new(0f64, 0f64, 0f64));
+    }
 
     #[test]
     fn to_bytes() {
