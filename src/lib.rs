@@ -1,3 +1,5 @@
+#![cfg_attr(not(test), no_std)]
+
 // Copyright (c) 2023 Nikolai Serafimovich
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -15,8 +17,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-use std::ops::{Add, Sub, Mul, Div};
-use std::cmp::PartialEq;
+use core::ops::{Add, Sub, Mul, Div};
+use core::cmp::PartialEq;
+
+use libm;
 
 #[derive(Copy, Clone, Debug, Default)]
 pub struct Vector3 {
@@ -27,6 +31,7 @@ pub struct Vector3 {
 
 #[allow(unused)]
 impl Vector3 {
+    #[no_mangle]
     pub fn new(x: f64, y: f64, z: f64) -> Vector3 {
         Vector3 {
             x,
@@ -35,20 +40,21 @@ impl Vector3 {
         }
     }
 
+    #[no_mangle]
     pub fn new_zero() -> Vector3 {
         Vector3 { x: 0.0, y: 0.0, z: 0.0 }
     }
 
-    /// Return the vector from the memory representation in **big-endian** byte order. Order -> `x, y, z`
-    pub fn from_be_bytes(bytes: [u8; 24]) -> Result<Vector3, Box<dyn std::error::Error>> {
-        Ok(Vector3 {
-            x: f64::from_be_bytes(bytes[..8].try_into()?),
-            y: f64::from_be_bytes(bytes[8..16].try_into()?),
-            z: f64::from_be_bytes(bytes[16..].try_into()?)
-        })   
+    /// Return the vector from the memory representation in **big-endian** byte order. Order -> **x**, **y**, **z**
+    pub fn from_be_bytes(bytes: [u8; 24]) -> Vector3 {
+        Vector3 {
+            x: f64::from_be_bytes(bytes[..8].try_into().unwrap()),
+            y: f64::from_be_bytes(bytes[8..16].try_into().unwrap()),
+            z: f64::from_be_bytes(bytes[16..].try_into().unwrap())
+        } 
     }
 
-    /// Return the memory representation of this vector as a byte array in **big-endian** byte order. Order -> `x, y, z`
+    /// Return the memory representation of this vector as a byte array in **big-endian** byte order. Order -> **x**, **y**, **z**
     pub fn to_be_bytes(&self) -> [u8; 24] {
         let mut result: [u8; 24] = [0; 24];
 
@@ -61,7 +67,7 @@ impl Vector3 {
 
     /// Get vector's length
     pub fn magnitude(&self) -> f64 {
-        (*self**self).sqrt()
+        libm::sqrt(*self**self)
     }
     /// Same as `magnitude()`, but **not** sqrted
     pub fn sqr_magnitude(&self) -> f64 {
@@ -69,11 +75,11 @@ impl Vector3 {
     }
     /// Normalize vector or set it's length to `1`, but keep the same direction
     pub fn normalize(&self) -> Vector3 {
-        (1.0 / (self.x * self.x + self.y * self.y + self.z + self.z).sqrt()) * *self
+        (1.0 / libm::sqrt(self.x * self.x + self.y * self.y + self.z + self.z)) * *self
     }
     /// Raises each axis of the vector to a floating point power
     pub fn powf(&self, power: f64) -> Vector3 {
-        Vector3 { x: self.x.powf(power), y: self.y.powf(power), z: self.z.powf(power) }
+        Vector3 { x: libm::pow(self.x, power), y: libm::pow(self.y, power), z: libm::pow(self.z, power) }
     }
 
     /// Get angle between two vectors
@@ -81,7 +87,7 @@ impl Vector3 {
         let dot: f64 = *self**v2;
         let magnitudes: (f64, f64) = (self.magnitude(), v2.magnitude());
 
-        (dot / (magnitudes.0 * magnitudes.1)).acos().to_degrees()
+        libm::acos(dot / (magnitudes.0 * magnitudes.1)).to_degrees()
     }
     /// Project on vector
     pub fn project_on(&self, b: &Vector3) -> Vector3 {
@@ -92,8 +98,16 @@ impl Vector3 {
     pub fn reject_from(&self, b: &Vector3) -> Vector3 {
         *self - self.project_on(b)
     }
-}
 
+    /// Get cross product of the two vectors
+    pub fn cross(&self, b: &Vector3) -> Vector3 {
+        Vector3::new(
+            self.y * b.z - self.z * b.y,
+            self.z * b.x - self.x * b.z,
+            self.x * b.y - self.y * b.x
+        )
+    }
+}
 
 impl Mul<Vector3> for f64 {
     type Output = Vector3;
@@ -165,14 +179,18 @@ mod tests {
     }
 
     #[test]
-    fn to_bytes() {
+    fn to_bytes_and_back() {
         let vector_a = Vector3 {
             x: 4.0,
             y: 4.0,
             z: 4.0
         };
-        println!("{:?}", &vector_a.to_be_bytes());
+
         assert_eq!(vec![64, 16, 0, 0, 0, 0, 0, 0, 64, 16, 0, 0, 0, 0, 0, 0, 64, 16, 0, 0, 0, 0, 0, 0], vector_a.to_be_bytes().to_vec());
+
+        let bytes = vector_a.to_be_bytes();
+        let vector_b = Vector3::from_be_bytes(bytes);
+        assert_eq!(vector_a, vector_b);
     }
 
     #[test]
@@ -262,6 +280,14 @@ mod tests {
         };
 
         assert_eq!(115.55996517182382, vector_a.angle(&vector_b));
+    }
+
+    #[test]
+    fn cross_product() {
+        let vector_a = Vector3::new(1.0, 2.0, 3.0);
+        let vector_b = Vector3::new(2.0, 1.0, 3.0);
+
+        assert_eq!(Vector3::new(3.0, 3.0, -3.0), vector_a.cross(&vector_b));
     }
 
 
