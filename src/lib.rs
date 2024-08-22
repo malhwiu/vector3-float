@@ -1,6 +1,6 @@
 #![cfg_attr(not(test), no_std)]
 
-// Copyright (c) 2023 Nikolai Serafimovich
+// Copyright (c) 2024 Nikolai Serafimovich
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,6 +19,7 @@
 
 #[cfg(test)]
 mod tests;
+pub mod dir;
 
 use core::ops::{Add, Sub, Mul, Div};
 use core::cmp::PartialEq;
@@ -35,7 +36,7 @@ pub struct Vector3 {
 #[allow(unused)]
 impl Vector3 {
     #[no_mangle]
-    pub fn new(x: f64, y: f64, z: f64) -> Vector3 {
+    pub const fn new(x: f64, y: f64, z: f64) -> Vector3 {
         Vector3 {
             x,
             y,
@@ -44,7 +45,7 @@ impl Vector3 {
     }
 
     #[no_mangle]
-    pub fn new_zero() -> Vector3 {
+    pub const fn new_zero() -> Vector3 {
         Vector3 { x: 0.0, y: 0.0, z: 0.0 }
     }
 
