@@ -107,7 +107,18 @@ fn angle_between() {
         x: 1.0, y: 7.0, z: 0.0
     };
 
-    assert_eq!(115.55996517182382, vector_a.angle(&vector_b));
+    assert_eq!(115.55996517182382, vector_a.angle_degrees(&vector_b));
+
+    let vector_a = Vector3 {
+        x: 1.0, y: 0.0, z: 0.0
+    };
+
+    let vector_b = Vector3 {
+        x: 0.0, y: 1.0, z: 0.0
+    };
+
+    assert_eq!(vector_a.angle_degrees(&vector_b), 90.0);
+    assert_eq!(vector_a.angle_radians(&vector_b), 1.5707963267948966);
 }
 
 #[test]

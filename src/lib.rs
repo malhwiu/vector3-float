@@ -1,6 +1,6 @@
 #![cfg_attr(not(test), no_std)]
 
-// Copyright (c) 2023 Nikolai Serafimovich
+// Copyright (c) 2024 Nikolai Serafimovich
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -85,14 +85,33 @@ impl Vector3 {
         Vector3 { x: libm::pow(self.x, power), y: libm::pow(self.y, power), z: libm::pow(self.z, power) }
     }
 
-    /// Get angle between two vectors
+    /// Get angle between two vectors in **degrees(!!!)**
+    /// 
+    /// **LEGACY**
     pub fn angle(&self, v2: &Vector3) -> f64 {
         let dot: f64 = *self**v2;
         let magnitudes: (f64, f64) = (self.magnitude(), v2.magnitude());
 
         libm::acos(dot / (magnitudes.0 * magnitudes.1)).to_degrees()
     }
-    /// Project on vector
+
+    /// Get angle between two vectors in **degrees**
+    pub fn angle_degrees(&self, rhs: &Vector3) -> f64 {
+        let dot: f64 = *self**rhs;
+        let magnitudes: (f64, f64) = (self.magnitude(), rhs.magnitude());
+
+        libm::acos(dot / (magnitudes.0 * magnitudes.1)).to_degrees()
+    }
+
+    /// Get angle between two vectors in **radians**
+    pub fn angle_radians(&self, rhs: &Vector3) -> f64 {
+        let dot: f64 = *self**rhs;
+        let magnitudes: (f64, f64) = (self.magnitude(), rhs.magnitude());
+
+        libm::acos(dot / (magnitudes.0 * magnitudes.1))
+    }
+
+    /// Project on (or onto) vector 
     pub fn project_on(&self, b: &Vector3) -> Vector3 {
         *b*((*self * *b) / (*b * *b))
     }
@@ -138,7 +157,7 @@ impl Div<f64> for Vector3 {
 
 impl Mul<Vector3> for Vector3 {
     type Output = f64;
-    /// Get dot product of two vectors
+    /// The entrywise product of A and B
     fn mul(self, rhs: Vector3) -> f64 {
         (self.x * rhs.x) + (self.y * rhs.y) + (self.z * rhs.z)
     }

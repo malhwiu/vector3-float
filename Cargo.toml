@@ -1,6 +1,6 @@
 [package]
-name = "vector3_rust"
-version = "2.5.0"
+name = "vector"
+version = "2.6.0"
 edition = "2021"
 
 [dependencies]
