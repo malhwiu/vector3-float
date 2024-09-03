@@ -18,7 +18,7 @@ fn to_bytes_and_back() {
 
     let bytes = vector_a.to_be_bytes();
     let vector_b = Vector3::from_be_bytes(bytes);
-    assert_eq!(vector_a, vector_b);
+    assert_eq!(vector_a, vector_b.unwrap());
 }
 
 #[test]
@@ -34,7 +34,7 @@ fn project() {
         z: 0.0
     };
     
-    assert_eq!(vector_a.project_on(&vector_b), Vector3 { x: 2.4, y: 4.8, z: 0.0});
+    assert_eq!(vector_a.project(&vector_b), Vector3 { x: 2.4, y: 4.8, z: 0.0});
 }
 
 #[test]
@@ -46,6 +46,13 @@ fn scalar_multiply() {
     let val: f64 = 5.0;
 
     assert_eq!(Vector3 {x: 1.5 * val, y: -4.3 * val, z: 2.7 * val}, vec * val);
+}
+
+#[test]
+fn normalize() {
+    let vec = Vector3::new(5.0, 0.0, 0.0);
+
+    assert_eq!(vec.normalize(), Vector3::new(1.0, 0.0, 0.0));
 }
 
 #[test]
@@ -61,10 +68,10 @@ fn sub_two_vectors() {
         x: 1.5, y: -4.3, z: 2.7
     };
     let vector2 = Vector3 {
-        x: 1.5, y: -4.3, z: 2.7
+        x: 1.5, y: -4.3, z: 2.8
     };
 
-    assert_eq!(vector1 - vector2, Vector3 {x: 0.0, y: 0.0, z: 0.0});
+    assert_eq!(vector1 - vector2, Vector3 {x: 0.0, y: 0.0, z: -0.09999999999999964});
 }
 #[test]
 fn add_two_vectors() {
@@ -72,19 +79,19 @@ fn add_two_vectors() {
         x: 1.5, y: -4.3, z: 2.7
     };
     let vector2 = Vector3 {
-        x: 1.5, y: -4.3, z: 2.7
+        x: 1.5, y: -4.3, z: 2.8
     };
 
-    assert_eq!(vector1 + vector2, Vector3 {x: 1.5 * 2.0, y: -4.3 * 2.0, z: 2.7 * 2.0});
+    assert_eq!(vector1 + vector2, Vector3 {x: 1.5 * 2.0, y: -4.3 * 2.0, z: 5.5});
 }
 #[test]
 fn vector_magnitude() {
     let vector = Vector3 {
-        x: 1.5, y: -4.3, z: 2.7
+        x: 1.5, y: -4.3, z: 10.1
     };
 
-    assert_eq!(vector.magnitude(), 5.294336596779619);
-    assert_eq!(vector.sqr_magnitude(), 28.03);
+    assert_eq!(vector.magnitude(), 11.07925990308017);
+    assert_eq!(vector.sqrt_magnitude(), 122.74999999999999);
 }
 #[test]
 fn dot_vectors() {
@@ -92,10 +99,10 @@ fn dot_vectors() {
         x: 1.5, y: -4.3, z: 2.7
     };
     let vector2 = Vector3 {
-        x: 1.5, y: -4.3, z: 2.7
+        x: 1.5, y: -4.3, z: 2.8
     };
 
-    assert_eq!(vector1 * vector2, 28.03);
+    assert_eq!(vector1 * vector2, Vector3::new(2.25, 18.49, 7.56));
 }
 
 #[test]
@@ -126,5 +133,19 @@ fn cross_product() {
     let vector_a = Vector3::new(1.0, 2.0, 3.0);
     let vector_b = Vector3::new(2.0, 1.0, 3.0);
 
-    assert_eq!(Vector3::new(3.0, 3.0, -3.0), vector_a.cross(&vector_b));
+    assert_eq!(vector_a.cross(&vector_b), Vector3::new(3.0, 3.0, -3.0));
+}
+
+#[test]
+fn floor_it() {
+    let vector = Vector3::new(5.3, 2.1, 5.4);
+
+    assert_eq!(vector.floor(), Vector3::new(5.0, 2.0, 5.0));
+}
+
+#[test]
+fn ceil_it() {
+    let vector = Vector3::new(5.7, 2.6, 5.5);
+
+    assert_eq!(vector.ceil(), Vector3::new(6.0, 3.0, 6.0));
 }
