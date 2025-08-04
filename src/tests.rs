@@ -50,9 +50,9 @@ fn scalar_multiply() {
 
 #[test]
 fn normalize() {
-    let vec = Vector3::new(5.0, 0.0, 0.0);
+    let vec = Vector3::new(5.0, 1.4, -4.0);
 
-    assert_eq!(vec.normalize(), Vector3::new(1.0, 0.0, 0.0));
+    assert_eq!(vec.normalize(), Vector3::new(0.7628477471216917, 0.21359736919407366, -0.6102781976973534));
 }
 
 #[test]

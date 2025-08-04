@@ -85,7 +85,7 @@ impl Vector3 {
     /// Normalize vector or set it's length to `1`, but keep the same direction
     pub fn normalize(&self) -> Self {
         #[cfg(feature = "std")]
-        return (1.0 / (self.x * self.x + self.y * self.y + self.z + self.z).sqrt()) * *self;
+        return (1.0 / (self.x * self.x + self.y * self.y + self.z * self.z).sqrt()) * *self;
 
         #[cfg(not(feature = "std"))]
         return (1.0 / libm::sqrt(self.x * self.x + self.y * self.y + self.z * self.z)) * *self;
