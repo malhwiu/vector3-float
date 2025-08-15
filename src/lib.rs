@@ -1,6 +1,6 @@
 #![cfg_attr(all(not(test), not(feature = "std")), no_std)]
 
-// Copyright (c) 2024 Nikolai Serafimovich
+// Copyright (c) 2024 Malhwiu
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
