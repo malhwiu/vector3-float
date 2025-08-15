@@ -20,6 +20,9 @@
 #[cfg(test)]
 mod tests;
 
+#[cfg(feature="serde")]
+use serde::{Deserialize, Serialize};
+
 use core::array::TryFromSliceError;
 use core::ops::{Add, Sub, Mul, Div};
 use core::cmp::PartialEq;
@@ -28,8 +31,9 @@ use core::cmp::PartialEq;
 use libm;
 
 #[derive(Copy, Clone, Debug, Default, PartialEq)]
+#[cfg_attr(feature="serde", derive(Deserialize, Serialize))]
 pub struct Vector3 {
-    pub x: f64,    
+    pub x: f64,
     pub y: f64,
     pub z: f64
 }
